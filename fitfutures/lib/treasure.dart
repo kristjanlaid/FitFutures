@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'widgets/custom_marker.dart';
 
 class TreasureMap extends StatefulWidget {
   const TreasureMap({super.key});
@@ -14,6 +16,19 @@ class TreasureMapState extends State<TreasureMap> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
+  late String _mapStyle;
+
+  @override
+  void initState() {
+    super.initState();
+
+    rootBundle.loadString('assets/map_theme.json').then((string) {
+      setState(() {
+        _mapStyle = string;
+      });
+    });
+  }
+
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
@@ -25,6 +40,8 @@ class TreasureMapState extends State<TreasureMap> {
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
 
+  Set<Marker> _markers = Set<Marker>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,18 +50,51 @@ class TreasureMapState extends State<TreasureMap> {
         initialCameraPosition: _kGooglePlex,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
+          controller.setMapStyle(_mapStyle);
+
+          _addMarkers();
         },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: const Text('To the lake!'),
-        icon: const Icon(Icons.directions_boat),
+        markers: _markers,
       ),
     );
   }
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    await controller.animateCamera(CameraUpdate.newCameraPosition(_kpos));
+  void _addMarkers() {
+    List<LatLng> coordinates = [
+      LatLng(37.42, -122.08),
+      LatLng(37.43, -122.09),
+      LatLng(37.44, -122.11),
+    ];
+
+    _markers.clear();
+
+    for (var coord in coordinates) {
+      _markers.add(
+        Marker(
+            markerId: MarkerId(coord.toString()),
+            position: coord,
+            onTap: () {
+              _onMarkerTapped(coord);
+            },
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueGreen)),
+      );
+    }
+  }
+
+  void _onMarkerTapped(LatLng position) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            height: 200,
+            child: Center(
+              child: Text(
+                'Custom Marker Tapped at (${position.latitude}, ${position.longitude})',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          );
+        });
   }
 }
