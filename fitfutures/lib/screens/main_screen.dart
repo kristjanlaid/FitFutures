@@ -2,7 +2,6 @@ import 'package:fitfutures/screens/trade_screen.dart';
 import 'package:fitfutures/treasure.dart';
 import 'package:fitfutures/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:fitfutures/treasure.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

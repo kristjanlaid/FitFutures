@@ -16,7 +16,8 @@ class Token extends BaseEntity {
     return Token(
       id: json['id'],
       name: json['name'],
-      pictureBytes: Uint8List.fromList(List<int>.from(json["picture"]["data"])),
+      pictureBytes:
+          Uint8List.fromList(List<int>.from(json["picture_binary"]["data"])),
     );
   }
 }
