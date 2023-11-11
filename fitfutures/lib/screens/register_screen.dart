@@ -21,7 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
 
-  AuthService service = AuthService();
+  UserService service = UserService();
 
   Future<UserInfo> register() async {
     RegisterData data = RegisterData(

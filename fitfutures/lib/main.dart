@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(fontFamily: 'Poppins'),
-      initialRoute: "/register",
+      initialRoute: "/main",
       routes: {
         "/register": (context) => const RegisterScreen(),
         "/main": (context) => const MainScreen(),

@@ -28,6 +28,7 @@ class _TreasureMapState extends State<TreasureMap> {
   late String _mapStyle;
   Set<Marker> _markers = <Marker>{};
   TreasureService service = TreasureService();
+  int? selectedOption = 1;
 
   Future<List<Treasure>> fetchTreasures() async {
     return await service.getAll();
@@ -79,8 +80,8 @@ class _TreasureMapState extends State<TreasureMap> {
             markerId: MarkerId(treasure.id.toString()),
             position: LatLng(treasure.cordy, treasure.cordx),
             icon: await BitmapDescriptor.fromAssetImage(
-                const ImageConfiguration(devicePixelRatio: 2.0),
-                'assets/map_marker.png'),
+                const ImageConfiguration(size: Size.square(24)),
+                'assets/chest.png'),
             onTap: () {
               _onMarkerTapped(LatLng(treasure.cordy, treasure.cordx));
             }),
@@ -132,19 +133,18 @@ class _TreasureMapState extends State<TreasureMap> {
             ),
           ),
         ),
-        PopupMenuItem<String>(
+        PopupMenuItem(
           value: 'item3',
           child: Center(
             child: Container(
-              width: 250, // Set the desired width
-              height: 150, // Set the desired height
-              padding: const EdgeInsets.all(16.0),
-              child: ListView(
-                children: <Widget>[
-                  ListTile(
-                    title: const Text('Variant 1'),
-                    leading: Radio(
+                width: 250, // Set the desired width
+                height: 150, // Set the desired height
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Radio(
                       value: 1,
+                      toggleable: true,
                       groupValue: selectedOption,
                       onChanged: (value) {
                         setState(() {
@@ -153,10 +153,7 @@ class _TreasureMapState extends State<TreasureMap> {
                         });
                       },
                     ),
-                  ),
-                  ListTile(
-                    title: const Text('Variant 2'),
-                    leading: Radio(
+                    Radio(
                       value: 2,
                       groupValue: selectedOption,
                       onChanged: (value) {
@@ -166,10 +163,8 @@ class _TreasureMapState extends State<TreasureMap> {
                         });
                       },
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  ],
+                )),
           ),
         ),
       ],
@@ -200,8 +195,6 @@ class _TreasureMapState extends State<TreasureMap> {
         calculateDistance(element.position, _currentPosition!) <= 5);
     return cloneMarkers;
   }
-
-  int? selectedOption;
 
   @override
   Widget build(BuildContext context) {
