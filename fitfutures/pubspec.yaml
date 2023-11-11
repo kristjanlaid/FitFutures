@@ -45,3 +45,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/MINU_SVG.svg
+    - assets/map_marker.png
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: fonts/Poppins-Bold.ttf
+        - asset: fonts/Poppins-Regular.ttf

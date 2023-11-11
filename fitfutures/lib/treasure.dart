@@ -10,6 +10,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as location;
 import 'package:flutter/services.dart' show rootBundle;
 
+import 'widgets/custom_marker.dart';
+
 class TreasureMap extends StatefulWidget {
   const TreasureMap({super.key});
 
@@ -74,33 +76,110 @@ class _TreasureMapState extends State<TreasureMap> {
     for (Treasure treasure in treasures) {
       _markers.add(
         Marker(
-          markerId: MarkerId(treasure.id.toString()),
-          position: LatLng(treasure.cordy, treasure.cordx),
-          onTap: () {
-            _onMarkerTapped();
-          },
-          icon: await BitmapDescriptor.fromAssetImage(
-              const ImageConfiguration(devicePixelRatio: 2.0),
-              'assets/typescript-logo-24.png'),
-        ),
+            markerId: MarkerId(treasure.id.toString()),
+            position: LatLng(treasure.cordy, treasure.cordx),
+            icon: await BitmapDescriptor.fromAssetImage(
+                const ImageConfiguration(devicePixelRatio: 2.0),
+                'assets/map_marker.png'),
+            onTap: () {
+              _onMarkerTapped(LatLng(treasure.cordy, treasure.cordx));
+            }),
       );
     }
   }
 
-  void _onMarkerTapped() {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return const SizedBox(
-            height: 200,
-            child: Center(
-              child: Text(
-                'Custom Marker Tapped at ()',
-                style: TextStyle(fontSize: 18),
+  Future<void> _onMarkerTapped(LatLng position) async {
+    BuildContext context = _scaffoldKey.currentContext!;
+
+    Size screenSize = MediaQuery.of(context).size;
+
+    double centerX = screenSize.width / 2;
+    double centerY = screenSize.height / 2;
+
+    // Show the popup menu and wait for user selection
+    String? result = await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+          centerX - 140, centerY - 225, centerX + 140, centerY + 135),
+      items: [
+        PopupMenuItem<String>(
+          value: 'item1',
+          child: Center(
+            child: Container(
+              width: 150, // Set the desired width
+              height: 200, // Set the desired height
+              padding: const EdgeInsets.all(16.0),
+              child: const Center(
+                  child: Text(
+                '?',
+                style: TextStyle(fontSize: 150.0, fontWeight: FontWeight.bold),
+              )),
+            ),
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'item2',
+          child: Center(
+            child: Container(
+              width: 250, // Set the desired width
+              height: 60, // Set the desired height
+              //padding: const EdgeInsets.all(16.0),
+              child: const Center(
+                  child: Text(
+                'Challenge:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
+            ),
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'item3',
+          child: Center(
+            child: Container(
+              width: 250, // Set the desired width
+              height: 150, // Set the desired height
+              padding: const EdgeInsets.all(16.0),
+              child: ListView(
+                children: <Widget>[
+                  ListTile(
+                    title: const Text('Variant 1'),
+                    leading: Radio(
+                      value: 1,
+                      groupValue: selectedOption,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedOption = value;
+                          print("Button value: $value");
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Variant 2'),
+                    leading: Radio(
+                      value: 2,
+                      groupValue: selectedOption,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedOption = value;
+                          print("Button value: $value");
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-          );
-        });
+          ),
+        ),
+      ],
+    );
+
+    // Handle the selected item
+    if (result != null) {
+      // Perform actions based on the selected item
+      print('Selected item: $result');
+    }
   }
 
   double calculateDistance(LatLng latLng1, LatLng myPos) {
@@ -122,9 +201,12 @@ class _TreasureMapState extends State<TreasureMap> {
     return cloneMarkers;
   }
 
+  int? selectedOption;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : GoogleMap(
@@ -151,4 +233,6 @@ class _TreasureMapState extends State<TreasureMap> {
             ),
     );
   }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 }
