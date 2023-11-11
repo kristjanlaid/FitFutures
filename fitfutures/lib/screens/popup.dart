@@ -37,22 +37,26 @@ class _PopupMenuState extends State<PopupMenu> {
                         TextStyle(fontSize: 100, fontWeight: FontWeight.bold)),
               ),
             ),
-            const ListTile(
-              title: Center(
-                child: Text('Challenge:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+            Center(
+              child: Container(
+                child: const Text(
+                  'There are two fathers and two sons in a car. How many people are in the car?',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
             Container(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                //mainAxisAlignment: MainAxisAlignment.center,
+                //crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    //crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Radio(
+                        activeColor: AppColors.secondary3,
                         value: 1,
                         groupValue: selectedOption,
                         onChanged: (value) {
@@ -61,14 +65,18 @@ class _PopupMenuState extends State<PopupMenu> {
                           });
                         },
                       ),
-                      const Text('Variant 1'),
+                      const Padding(
+                        padding: EdgeInsets.only(right: 15),
+                        child: Text('Three (3)'),
+                      ),
                     ],
                   ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    //crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Radio(
+                        activeColor: AppColors.secondary3,
                         value: 2,
                         groupValue: selectedOption,
                         onChanged: (value) {
@@ -77,14 +85,17 @@ class _PopupMenuState extends State<PopupMenu> {
                           });
                         },
                       ),
-                      const Text('Variant 2'),
+                      const Padding(
+                        padding: EdgeInsets.only(right: 15),
+                        child: Text('Four (4)'),
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
             Container(
-              width: 100,
+              width: 110,
               height: 40,
               child: ElevatedButton(
                 style: ButtonStyle(
