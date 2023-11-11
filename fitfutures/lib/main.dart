@@ -1,7 +1,5 @@
 import 'package:fitfutures/screens/main_screen.dart';
-import 'package:fitfutures/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
-import 'treasure.dart';
 
 void main() {
   runApp(const MyApp());

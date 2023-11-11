@@ -1,3 +1,5 @@
+import 'package:fitfutures/screens/trade_screen.dart';
+import 'package:fitfutures/treasure.dart';
 import 'package:fitfutures/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -11,13 +13,8 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   final _screens = const <Widget>[
-    Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [Text("Test")],
-    ),
-    Column(
-      children: [Text("Test")],
-    ),
+    TreasureMap(),
+    TradeScreen(),
     Column(
       children: [Text("Test")],
     )
