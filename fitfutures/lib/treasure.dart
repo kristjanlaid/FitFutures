@@ -12,6 +12,8 @@ import 'package:flutter/services.dart' show rootBundle;
 
 import 'widgets/custom_marker.dart';
 
+import 'package:fitfutures/widgets/popup.dart';
+
 class TreasureMap extends StatefulWidget {
   const TreasureMap({super.key});
 
@@ -90,91 +92,12 @@ class _TreasureMapState extends State<TreasureMap> {
   }
 
   Future<void> _onMarkerTapped(LatLng position) async {
-    BuildContext context = _scaffoldKey.currentContext!;
-
-    Size screenSize = MediaQuery.of(context).size;
-
-    double centerX = screenSize.width / 2;
-    double centerY = screenSize.height / 2;
-
-    // Show the popup menu and wait for user selection
-    String? result = await showMenu(
+    return showDialog(
       context: context,
-      position: RelativeRect.fromLTRB(
-          centerX - 140, centerY - 225, centerX + 140, centerY + 135),
-      items: [
-        PopupMenuItem<String>(
-          value: 'item1',
-          child: Center(
-            child: Container(
-              width: 150, // Set the desired width
-              height: 200, // Set the desired height
-              padding: const EdgeInsets.all(16.0),
-              child: const Center(
-                  child: Text(
-                '?',
-                style: TextStyle(fontSize: 150.0, fontWeight: FontWeight.bold),
-              )),
-            ),
-          ),
-        ),
-        PopupMenuItem<String>(
-          value: 'item2',
-          child: Center(
-            child: Container(
-              width: 250, // Set the desired width
-              height: 60, // Set the desired height
-              //padding: const EdgeInsets.all(16.0),
-              child: const Center(
-                  child: Text(
-                'Challenge:',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )),
-            ),
-          ),
-        ),
-        PopupMenuItem(
-          value: 'item3',
-          child: Center(
-            child: Container(
-                width: 250, // Set the desired width
-                height: 150, // Set the desired height
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Radio(
-                      value: 1,
-                      toggleable: true,
-                      groupValue: selectedOption,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedOption = value;
-                          print("Button value: $value");
-                        });
-                      },
-                    ),
-                    Radio(
-                      value: 2,
-                      groupValue: selectedOption,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedOption = value;
-                          print("Button value: $value");
-                        });
-                      },
-                    ),
-                  ],
-                )),
-          ),
-        ),
-      ],
+      builder: (BuildContext context) {
+        return PopupMenu();
+      },
     );
-
-    // Handle the selected item
-    if (result != null) {
-      // Perform actions based on the selected item
-      print('Selected item: $result');
-    }
   }
 
   double calculateDistance(LatLng latLng1, LatLng myPos) {
