@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:fitfutures/model/token.dart';
 import 'package:fitfutures/model/treasure.dart';
 import 'package:fitfutures/service/base/base_entity_service.dart';
 

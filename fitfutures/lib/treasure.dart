@@ -30,6 +30,7 @@ class _TreasureMapState extends State<TreasureMap> {
   late String _mapStyle;
   Set<Marker> _markers = <Marker>{};
   TreasureService service = TreasureService();
+  int? selectedOption = 1;
 
   Future<List<Treasure>> fetchTreasures() async {
     return await service.getAll();
@@ -81,8 +82,8 @@ class _TreasureMapState extends State<TreasureMap> {
             markerId: MarkerId(treasure.id.toString()),
             position: LatLng(treasure.cordy, treasure.cordx),
             icon: await BitmapDescriptor.fromAssetImage(
-                const ImageConfiguration(devicePixelRatio: 2.0),
-                'assets/map_marker.png'),
+                const ImageConfiguration(size: Size.square(24)),
+                'assets/chest.png'),
             onTap: () {
               _onMarkerTapped(LatLng(treasure.cordy, treasure.cordx));
             }),
@@ -117,8 +118,6 @@ class _TreasureMapState extends State<TreasureMap> {
         calculateDistance(element.position, _currentPosition!) <= 5);
     return cloneMarkers;
   }
-
-  int? selectedOption;
 
   @override
   Widget build(BuildContext context) {

@@ -47,6 +47,7 @@ flutter:
     - assets/
     - assets/MINU_SVG.svg
     - assets/map_marker.png
+    - assets/chest.png
 
   fonts:
     - family: Poppins
