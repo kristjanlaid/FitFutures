@@ -1,8 +1,16 @@
+import 'package:fitfutures/model/user_data_notifier.dart';
 import 'package:fitfutures/screens/main_screen.dart';
+import 'package:fitfutures/screens/register_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserDataNotifier(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -11,6 +19,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: MainScreen());
+    return MaterialApp(
+      initialRoute: "/register",
+      routes: {
+        "/register": (context) => const RegisterScreen(),
+        "/main": (context) => const MainScreen(),
+      },
+    );
   }
 }

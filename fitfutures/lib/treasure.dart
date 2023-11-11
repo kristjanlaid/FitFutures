@@ -1,41 +1,46 @@
 import 'dart:async';
+import 'dart:math';
 
+import 'package:fitfutures/model/treasure.dart';
+import 'package:fitfutures/service/treasure_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as location;
 import 'package:flutter/services.dart' show rootBundle;
-import 'widgets/custom_marker.dart';
-
 
 class TreasureMap extends StatefulWidget {
   const TreasureMap({super.key});
 
   @override
-  State<TreasureMap> createState() => TreasureMapState();
+  State<TreasureMap> createState() => _TreasureMapState();
 }
 
-class TreasureMapState extends State<TreasureMap> {
+class _TreasureMapState extends State<TreasureMap> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-
   LatLng? _currentPosition;
   bool isLoading = true;
   final location.Location _location = location.Location();
   late String _mapStyle;
+  Set<Marker> _markers = <Marker>{};
+  TreasureService service = TreasureService();
+
+  Future<List<Treasure>> fetchTreasures() async {
+    return await service.getAll();
+  }
 
   @override
   void initState() {
     super.initState();
     getLocation();
-  
-  rootBundle.loadString('assets/map_theme.json').then((string) {
+
+    rootBundle.loadString('assets/map_theme.json').then((string) {
       setState(() {
         _mapStyle = string;
       });
     });
-  }
 
     _location.onLocationChanged.listen((location.LocationData currentLocation) {
       setState(() {
@@ -45,7 +50,7 @@ class TreasureMapState extends State<TreasureMap> {
     });
   }
 
-  getLocation() async {
+  void getLocation() async {
     LocationPermission permission;
     permission = await Geolocator.requestPermission();
 
@@ -62,7 +67,60 @@ class TreasureMapState extends State<TreasureMap> {
     });
   }
 
-  Set<Marker> _markers = Set<Marker>();
+  void _addMarkers() async {
+    List<Treasure> treasures = await fetchTreasures();
+    _markers.clear();
+
+    for (Treasure treasure in treasures) {
+      _markers.add(
+        Marker(
+          markerId: MarkerId(treasure.id.toString()),
+          position: LatLng(treasure.cordy, treasure.cordx),
+          onTap: () {
+            _onMarkerTapped();
+          },
+          icon: await BitmapDescriptor.fromAssetImage(
+              const ImageConfiguration(devicePixelRatio: 2.0),
+              'assets/typescript-logo-24.png'),
+        ),
+      );
+    }
+  }
+
+  void _onMarkerTapped() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return const SizedBox(
+            height: 200,
+            child: Center(
+              child: Text(
+                'Custom Marker Tapped at ()',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          );
+        });
+  }
+
+  double calculateDistance(LatLng latLng1, LatLng myPos) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((myPos.latitude - latLng1.latitude) * p) / 2 +
+        c(latLng1.latitude * p) *
+            c(myPos.latitude * p) *
+            (1 - c((myPos.longitude - latLng1.longitude) * p)) /
+            2;
+    return 12742 * asin(sqrt(a));
+  }
+
+  Set<Marker> filterMarkers() {
+    Set<Marker> cloneMarkers = Set.from(_markers);
+    cloneMarkers.retainWhere((element) =>
+        calculateDistance(element.position, _currentPosition!) <= 5);
+    return cloneMarkers;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +133,7 @@ class TreasureMapState extends State<TreasureMap> {
                 Circle(
                   circleId: const CircleId('currentCircle'),
                   center: _currentPosition!,
-                  radius: 4000,
+                  radius: 5000,
                   fillColor: Colors.blue.shade100.withOpacity(0.5),
                   strokeColor: Colors.blue.shade100.withOpacity(0.1),
                 ),
@@ -85,51 +143,12 @@ class TreasureMapState extends State<TreasureMap> {
                   CameraPosition(target: _currentPosition!, zoom: 10),
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
-               controller.setMapStyle(_mapStyle);
+                controller.setMapStyle(_mapStyle);
 
                 _addMarkers();
               },
-              markers: _markers,
+              markers: filterMarkers(),
             ),
     );
-  }
-   
-  void _addMarkers() {
-    List<LatLng> coordinates = [
-      LatLng(37.42, -122.08),
-      LatLng(37.43, -122.09),
-      LatLng(37.44, -122.11),
-    ];
-
-    _markers.clear();
-
-    for (var coord in coordinates) {
-      _markers.add(
-        Marker(
-            markerId: MarkerId(coord.toString()),
-            position: coord,
-            onTap: () {
-              _onMarkerTapped(coord);
-            },
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueGreen)),
-      );
-    }
-  }
-
-  void _onMarkerTapped(LatLng position) {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            height: 200,
-            child: Center(
-              child: Text(
-                'Custom Marker Tapped at (${position.latitude}, ${position.longitude})',
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-          );
-        });
   }
 }
