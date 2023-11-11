@@ -45,4 +45,3 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
-    - assets/typescript-logo-24.png

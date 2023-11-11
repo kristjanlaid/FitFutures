@@ -7,7 +7,6 @@ class UserDataNotifier extends ChangeNotifier {
   int? get id => userInfo.id;
 
   void addJWT(UserInfo userRes) {
-    print(userRes.id);
     userInfo = userRes;
   }
 }
