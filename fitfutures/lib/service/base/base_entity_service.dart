@@ -12,7 +12,6 @@ class BaseEntityService<T extends BaseEntity> extends BaseService {
 
   Future<List<T>> getAll() async {
     Response res = await client.get(baseUrl);
-    print(res.statusCode);
     final List<Map<String, dynamic>> dataList =
         List<Map<String, dynamic>>.from(res.data);
     final List<T> entities =

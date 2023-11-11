@@ -22,7 +22,7 @@ class UserCollection extends BaseEntity {
       return Token.fromJson(tokenData);
     }).toList();
 
-    List<dynamic> userTokensData = json['userTokens'] ?? [];
+    List<dynamic> userTokensData = json['userOwnedTokens'] ?? [];
     List<UserToken> userTokensList = userTokensData.map((userTokenData) {
       return UserToken.fromJson(userTokenData);
     }).toList();

@@ -6,6 +6,6 @@ class BaseService {
   late String baseUrl;
 
   BaseService({required url}) {
-    baseUrl = "https://fitfutures-api.vercel.app/$url";
+    baseUrl = "https://fitfutures-api-y825.vercel.app/$url";
   }
 }
