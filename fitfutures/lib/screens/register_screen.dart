@@ -64,7 +64,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const Padding(padding: EdgeInsets.only(bottom: 16)),
             const Text(
-              "Create an account to increase your activity on join the fun treasure hunt",
+              "Create an account to increase your activity and join the fun treasure hunt",
               style: TextStyle(fontSize: 14, color: AppColors.secondary2),
             ),
             const Padding(padding: EdgeInsets.only(bottom: 24)),

@@ -10,9 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as location;
 import 'package:flutter/services.dart' show rootBundle;
 
-import 'widgets/custom_marker.dart';
-
-import 'package:fitfutures/widgets/popup.dart';
+import 'package:fitfutures/screens/popup.dart';
 
 class TreasureMap extends StatefulWidget {
   const TreasureMap({super.key});
@@ -85,17 +83,17 @@ class _TreasureMapState extends State<TreasureMap> {
                 const ImageConfiguration(size: Size.square(24)),
                 'assets/chest.png'),
             onTap: () {
-              _onMarkerTapped(LatLng(treasure.cordy, treasure.cordx));
+              _onMarkerTapped(treasure.id);
             }),
       );
     }
   }
 
-  Future<void> _onMarkerTapped(LatLng position) async {
+  Future<void> _onMarkerTapped(int? treasureId) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return PopupMenu();
+        return PopupMenu(treasureId: treasureId);
       },
     );
   }
