@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:fitfutures/model/treasure.dart';
+import 'package:fitfutures/screens/token_denied.dart';
 import 'package:fitfutures/service/treasure_service.dart';
 import 'package:flutter/material.dart';
 
@@ -91,14 +92,21 @@ class _TreasureMapState extends State<TreasureMap> {
   }
 
   Future<void> _onMarkerTapped(LatLng latLng, int? treasureId) async {
-    return calculateDistance(latLng, _currentPosition!) < 0.01
-        ? showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return PopupMenu(treasureId: treasureId);
-            },
-          )
-        : Future.delayed(Duration.zero);
+    if (calculateDistance(latLng, _currentPosition!) < 0.1) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return PopupMenu(treasureId: treasureId);
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return PopupMenuDenied();
+        },
+      );
+    }
   }
 
   double calculateDistance(LatLng latLng1, LatLng myPos) {
