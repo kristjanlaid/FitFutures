@@ -83,19 +83,22 @@ class _TreasureMapState extends State<TreasureMap> {
                 const ImageConfiguration(size: Size.square(24)),
                 'assets/chest.png'),
             onTap: () {
-              _onMarkerTapped(treasure.id);
+              _onMarkerTapped(
+                  LatLng(treasure.cordy, treasure.cordx), treasure.id);
             }),
       );
     }
   }
 
-  Future<void> _onMarkerTapped(int? treasureId) async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return PopupMenu(treasureId: treasureId);
-      },
-    );
+  Future<void> _onMarkerTapped(LatLng latLng, int? treasureId) async {
+    return calculateDistance(latLng, _currentPosition!) < 0.01
+        ? showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return PopupMenu(treasureId: treasureId);
+            },
+          )
+        : Future.delayed(Duration.zero);
   }
 
   double calculateDistance(LatLng latLng1, LatLng myPos) {
