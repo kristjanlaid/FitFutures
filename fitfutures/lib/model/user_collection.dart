@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:fitfutures/model/base/a_base_entity.dart';
 import 'package:fitfutures/model/token.dart';
 import 'package:fitfutures/model/user_token.dart';
@@ -5,6 +7,8 @@ import 'package:fitfutures/model/user_token.dart';
 class UserCollection extends BaseEntity {
   String name;
   String reward;
+  String description;
+  Uint8List collectionPic;
   List<Token> tokens;
   List<UserToken> userTokens;
 
@@ -13,6 +17,8 @@ class UserCollection extends BaseEntity {
       required this.name,
       required this.reward,
       required this.tokens,
+      required this.description,
+      required this.collectionPic,
       required this.userTokens})
       : super(id: id);
 
@@ -31,6 +37,9 @@ class UserCollection extends BaseEntity {
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
       reward: json['reward'] ?? '',
+      description: json['description'] ?? '',
+      collectionPic:
+          Uint8List.fromList(List<int>.from(json["picture_binary"]["data"])),
       tokens: tokensList,
       userTokens: userTokensList,
     );

@@ -1,4 +1,5 @@
 import 'package:fitfutures/model/user_data_notifier.dart';
+import 'package:fitfutures/screens/collection_detail_screen.dart';
 import 'package:fitfutures/screens/main_screen.dart';
 import 'package:fitfutures/screens/register_screen.dart';
 import 'package:flutter/material.dart';
